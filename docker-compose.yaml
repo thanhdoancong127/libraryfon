@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    image: eurekaserver:latest
+    container_name: eureka-server
+    ports:
+      - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
+    networks:
+      - library-network
+
+  # identity:
+  #   image: quay.io/keycloak/keycloak:24.0.3
+  #   command: ['start-dev']
+  #   environment:
+  #     - KEYCLOAK_ADMIN
+  #     - KEYCLOAK_ADMIN_PASSWORD
+  #     - KC_DB
+  #     - KC_DB_URL
+  #     - KC_DB_USERNAME
+  #     - KC_PROXY
+  #     - KC_DB_PASSWORD
+  #   ports:
+  #     - "${KEYCLOAK_PORT}:8080"
+  #   networks:
+  #     - library-network
+  #   depends_on:
+  #     - mysql
+
+  postgres:
+    image: debezium/postgres:15-alpine-custom
+    build: ./docker/postgres
+    hostname: ${POSTGRES_HOST}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - ./docker/postgres/postgresql.conf.sample:/usr/share/postgresql/postgresql.conf.sample
+      - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+      - postgres:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=500'
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    networks:
+      - library-network
+
+  book:
+    image: book:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_SERVER=http://eureka-server:${EUREKA_SERVER_PORT}/eureka
+      - DATABASE_URL=jdbc:mysql://book-db:${BOOK_DB_PORT}/${BOOK_DB_NAME}
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    networks:
+      - library-network
+    depends_on:
+      - eureka-server
+      - book-db
+
+  # book-db:
+  #   image: mysql:8.0
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #     - MYSQL_DATABASE=${BOOK_DB_NAME}
+  #   ports:
+  #     - "${BOOK_DB_PORT}:3306"
+  #   networks:
+  #     - library-network
+
+  # borrowing:
+  #   image: borrowing:latest
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=prod
+  #     - EUREKA_SERVER=http://eureka-server:${EUREKA_SERVER_PORT}/eureka
+  #     - DATABASE_URL=jdbc:mysql://borrowing-db:${BORROWING_DB_PORT}/${BORROWING_DB_NAME}
+  #     - DATABASE_USERNAME=root
+  #     - DATABASE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   networks:
+  #     - library-network
+  #   depends_on:
+  #     - eureka-server
+  #     - borrowing-db
+
+  # borrowing-db:
+  #   image: mysql:8.0
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #     - MYSQL_DATABASE=${BORROWING_DB_NAME}
+  #   ports:
+  #     - "${BORROWING_DB_PORT}:3306"
+  #   networks:
+  #     - library-network
+
+  # notification:
+  #   image: notification:latest
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=prod
+  #     - EUREKA_SERVER=http://eureka-server:${EUREKA_SERVER_PORT}/eureka
+  #     - RABBITMQ_URL=amqp://rabbitmq:${RABBITMQ_PORT}
+  #   networks:
+  #     - library-network
+  #   depends_on:
+  #     - eureka-server
+  #     - rabbitmq
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+  #     - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+  #   ports:
+  #     - "${RABBITMQ_PORT}:5672"
+  #     - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+  #   networks:
+  #     - library-network
+
+  # gateway:
+  #   image: gateway:latest
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=prod
+  #     - EUREKA_SERVER=http://eureka-server:${EUREKA_SERVER_PORT}/eureka
+  #   ports:
+  #     - "${GATEWAY_SERVICE_PORT}:8080"
+  #   networks:
+  #     - library-network
+  #   depends_on:
+  #     - eureka-server
+
+  # identity-service:
+  #   image: identityservice:latest
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=prod
+  #     - EUREKA_SERVER=http://eureka-server:${EUREKA_SERVER_PORT}/eureka
+  #     - KEYCLOAK_URL=http://keycloak:${KEYCLOAK_PORT}/auth
+  #     - DATABASE_URL=jdbc:mysql://identity-db:${IDENTITY_DB_PORT}/${IDENTITY_DB_NAME}
+  #     - DATABASE_USERNAME=root
+  #     - DATABASE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   networks:
+  #     - library-network
+  #   depends_on:
+  #     - eureka-server
+  #     - keycloak
+  #     - identity-db
+
+  # identity-db:
+  #   image: mysql:8.0
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #     - MYSQL_DATABASE=${IDENTITY_DB_NAME}
+  #   ports:
+  #     - "${IDENTITY_DB_PORT}:3306"
+  #   networks:
+  #     - library-network
+
+networks:
+  library-network:
+    driver: bridge
