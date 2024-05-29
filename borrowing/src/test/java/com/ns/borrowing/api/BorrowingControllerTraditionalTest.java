@@ -27,7 +27,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
 @WireMockTest(httpPort = 8200)
-public class BorrowingControllerTest {
+public class BorrowingControllerTraditionalTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -67,7 +67,7 @@ public class BorrowingControllerTest {
         HttpEntity<BorrowingPostVm> request = new HttpEntity<>(postVm, headers);
 
         ResponseEntity<String> borrowingGetVms = restTemplate.postForEntity("/borrowing/borrow", request, String.class);
-        System.out.println(borrowingGetVms);
-
+        
+        assert "Borrowing request sent successfully!".equals(borrowingGetVms.getBody());
     }
 }

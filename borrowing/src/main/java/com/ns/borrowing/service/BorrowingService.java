@@ -48,7 +48,7 @@ public class BorrowingService {
         try {
             final URI url = UriComponentsBuilder.fromHttpUrl(borrowingPath).path("/books/{id}").buildAndExpand(borrowingPostVm.bookId()).toUri();
             BookDetailVm bookDetailVm = webClient.get().uri(url).retrieve().bodyToMono(BookDetailVm.class).block();
-            if (bookDetailVm == null) {
+            if (bookDetailVm == null || bookDetailVm.id() == null) {
                 throw new NotFoundException("BOOK_NOT_FOUND", borrowingPostVm.bookId());
             }
         } catch (WebClientResponseException e) {
@@ -66,7 +66,6 @@ public class BorrowingService {
                             .returnDate(borrowingEntity.getReturnDate()).build();
 
         borrowingProducer.sendBorrowingMessage(borrowingMessage);
-
     }
 
     @Transactional(rollbackFor = NotFoundException.class)
