@@ -1,10 +1,16 @@
 package com.ns.borrowing.api;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.testcontainers.ext.ScriptUtils;
@@ -20,7 +26,13 @@ public class BorrowingControllerSpecificTest extends BaseGenericSelfTest {
         if(!bookAppContainer.isRunning()) {
             bookAppContainer.start();
         }
-        // add properties for borrowing
+    }
+
+    @BeforeEach
+    public void setUp() {
+        if(!notificationAppContainer.isRunning()) {
+            notificationAppContainer.start();
+        }
     }
 
     @Test
@@ -35,6 +47,13 @@ public class BorrowingControllerSpecificTest extends BaseGenericSelfTest {
 
         ResponseEntity<String> borrowingGetVms = testRestTemplate.postForEntity("/borrowing/borrow", request, String.class);
         assert "Borrowing request sent successfully!".equals(borrowingGetVms.getBody());
+
+        ResponseEntity<Object> notification = testRestTemplate.getForEntity("http://127.0.0.1:" + notificationAppContainer.getMappedPort(NOTIFICATION_PORT) +"/notification-service/notification", Object.class);
+        System.out.println(notification.getBody());
+        assert notification.hasBody() && notification.getStatusCode() == HttpStatus.OK;
+
+        Map mapConverter = (Map) notification.getBody();
+        assert mapConverter.get("NotificationGetVm") != null;
     }
 
     @AfterEach

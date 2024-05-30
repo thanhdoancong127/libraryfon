@@ -28,7 +28,7 @@ public abstract class BaseGenericSelfTest {
     protected static final String BOOK_PATH = "/book-service";
     protected static final String BOOK_IMAGE = "book.service";
     // Notification config
-    protected static final Integer NOTIFICATION_PORT = 8200;
+    protected static final Integer NOTIFICATION_PORT = 8400;
     protected static final String NOTIFICATION_PATH = "/notification-service";
     // DB config
     protected static final String POSTGRES_ALIAS = "postgres";
@@ -52,7 +52,7 @@ public abstract class BaseGenericSelfTest {
     protected static RabbitMQContainer rabbitContainer = new RabbitMQContainer("rabbitmq:3-management")
         .withNetwork(SHARED_NETWORK)
         .withNetworkAliases(RABBITMQ_ALIAS);
-    
+
     @Container
     protected static GenericContainer<?> bookAppContainer = new GenericContainer<>("book-service:latest")
         .withEnv(new HashMap<>(
@@ -75,8 +75,8 @@ public abstract class BaseGenericSelfTest {
     .withEnv("spring.datasource.username", dbContainer.getUsername())
     .withEnv("spring.datasource.password", dbContainer.getPassword())
     // Setup env for rabbitmq
-    .withEnv("spring.rabbitmq.host", rabbitContainer.getHost())
-    .withEnv("spring.rabbitmq.port", rabbitContainer.getAmqpPort().toString())
+    .withEnv("spring.rabbitmq.host", RABBITMQ_ALIAS)
+    .withEnv("spring.rabbitmq.port", "5672")
     .withEnv("spring.rabbitmq.username", rabbitContainer.getAdminUsername())
     .withEnv("spring.rabbitmq.password", rabbitContainer.getAdminPassword())
     .withExposedPorts(NOTIFICATION_PORT)
