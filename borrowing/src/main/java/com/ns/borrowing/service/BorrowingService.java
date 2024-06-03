@@ -41,7 +41,13 @@ public class BorrowingService {
     public List < BorrowingGetVm > getAllBorrowings() {
         // Get all borrowing records
         List < BorrowingEntity > borrowingEntities = borrowingRepository.findAll();
-        return borrowingEntities.stream().map(borrowingEntity -> new BorrowingGetVm(borrowingEntity.getId(), borrowingEntity.getBookId(), borrowingEntity.getUserId(), borrowingEntity.getBorrowDate(), borrowingEntity.getReturnDate())).toList();
+        return borrowingEntities.stream().map(borrowingEntity -> new BorrowingGetVm(
+            borrowingEntity.getId(),
+            borrowingEntity.getBookId(),
+            borrowingEntity.getUserId(),
+            borrowingEntity.getBorrowDate(),
+            borrowingEntity.getReturnDate())
+        ).toList();
     }
 
     public void saveBorrowingRecord(BorrowingPostVm borrowingPostVm) {
