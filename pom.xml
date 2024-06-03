@@ -60,18 +60,28 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
+
+            <plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.7</version> <!-- Use the appropriate version -->
+				<executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                        <goal>report</goal>
+                        </goals>
+                    </execution>
+				</executions>
+      		</plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -97,4 +107,28 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>book</id>
+            <modules>
+                <module>common</module>
+                <module>book</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>borrowing</id>
+            <modules>
+                <module>common</module>
+                <module>borrowing</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>notification</id>
+            <modules>
+                <module>common</module>
+                <module>notification</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
