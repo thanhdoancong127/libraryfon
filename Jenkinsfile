@@ -4,9 +4,6 @@ pipeline {
     environment {
         MAVEN_HOME = tool name: 'Maven 3.9.6', type: 'maven'
         JAVA_HOME = tool name: 'Java 21', type: 'jdk'
-        DOCKER_CREDENTIALS_ID = 'your-docker-credentials-id'
-        IMAGE_NAME = 'your-docker-image-name'
-        DOCKER_REPO = 'your-docker-repo-url'
     }
 
     stages {
