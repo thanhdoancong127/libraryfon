@@ -26,7 +26,6 @@ public abstract class BaseGenericSelfTest {
     // Book config
     protected static final int BOOK_PORT = 8200;
     protected static final String BOOK_PATH = "/book-service";
-    protected static final String BOOK_IMAGE = "book.service";
     // Notification config
     protected static final Integer NOTIFICATION_PORT = 8400;
     protected static final String NOTIFICATION_PATH = "/notification-service";
@@ -64,7 +63,6 @@ public abstract class BaseGenericSelfTest {
             )
         )).withExposedPorts(BOOK_PORT)
         .withNetwork(SHARED_NETWORK)
-        .withNetworkAliases(BOOK_IMAGE)
         .withExposedPorts(BOOK_PORT)
         .dependsOn(dbContainer);
 
