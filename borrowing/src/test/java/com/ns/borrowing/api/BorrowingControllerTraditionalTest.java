@@ -59,6 +59,9 @@ public class BorrowingControllerTraditionalTest {
                         .withStatus(200)));
     }
 
+    /**
+     * This test required PostgreSQL as server database and RabbitMQ as message broker
+     */
     @Test
     public void testBorrowBook() {
         BorrowingPostVm postVm = BorrowingPostVm.builder().bookId(1l).userId(1l).build();
