@@ -31,21 +31,11 @@ import com.ns.common.viewmodel.BorrowingMessage;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-// @SpringBootTest
-// @TestPropertySource(properties = {
-//     "spring.liquibase.enabled=false"
-// })
 @ExtendWith(MockitoExtension.class)
 public class BorrowingSeviceTest {
 
     @Mock
     private WebClient webClientMock;
-
-    @Mock
-    private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
-
-    @Mock
-    private WebClient.RequestHeadersSpec requestHeadersSpecMock;
 
     @Mock
     private WebClient.ResponseSpec responseSpecMock;
