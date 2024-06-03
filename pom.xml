@@ -107,28 +107,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>book</id>
-            <modules>
-                <module>common</module>
-                <module>book</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>borrowing</id>
-            <modules>
-                <module>common</module>
-                <module>borrowing</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>notification</id>
-            <modules>
-                <module>common</module>
-                <module>notification</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>
