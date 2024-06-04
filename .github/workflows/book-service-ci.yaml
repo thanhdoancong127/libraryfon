@@ -30,7 +30,7 @@ jobs:
 
       - if: steps.ryuk-cache.outputs.cache-hit != 'true'
         run: |
-          docker pull tc.testcontainers/ryuk:0.6.0
+          docker pull testcontainers/ryuk:0.6.0
           docker save -o ~/image-cache/ryuk.tar ryuk
 
       - if: steps.ryuk-cache.outputs.cache-hit == 'true'
