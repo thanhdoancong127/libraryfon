@@ -81,7 +81,6 @@ jobs:
             org.opencontainers.image.source=https://github.com/thanhdoancong127/libraryfon
             org.opencontainers.image.licenses=MIT
           tags: ghcr.io/thanhdoancong127/libraryfon/book:latest
-          visibility: public
 
       # - name: "Scan Docker Image with Trivy"
       #   if: ${{ github.ref == 'refs/heads/main' }}
