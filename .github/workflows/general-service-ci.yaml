@@ -170,7 +170,7 @@ jobs:
       #     category: 'image'
   borrowing-service-ci:
     runs-on: ubuntu-latest
-    # needs: [docker-build]
+    needs: [docker-build]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
