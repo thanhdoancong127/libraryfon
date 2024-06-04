@@ -43,15 +43,15 @@ jobs:
           docker save -o ~/image-cache/postgres.tar postgres
 
       - if: steps.postgres-cache.outputs.cache-hit == 'true'
-          run: docker load -i ~/image-cache/postgres.tar
+        run: docker load -i ~/image-cache/postgres.tar
 
       - if: steps.rabbitmq-cache.outputs.cache-hit != 'true'
-          run: |
-            docker pull rabbitmq:3-management
-            docker save -o ~/image-cache/rabbitmq.tar rabbitmq
+        run: |
+          docker pull rabbitmq:3-management
+          docker save -o ~/image-cache/rabbitmq.tar rabbitmq
 
       - if: steps.rabbitmq-cache.outputs.cache-hit == 'true'
-          run: docker load -i ~/image-cache/rabbitmq.tar
+        run: docker load -i ~/image-cache/rabbitmq.tar
 
       - uses: ./.github/workflows/actions
       - name: "Maven Build"
