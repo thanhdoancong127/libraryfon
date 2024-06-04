@@ -75,12 +75,12 @@ jobs:
         if: ${{ github.ref == 'refs/heads/integration-test-tc' }}
         uses: docker/build-push-action@v5
         with:
-          context: ./book-service
+          context: ./book
           push: true
           labels: |
             org.opencontainers.image.source=https://github.com/thanhdoancong127/libraryfon
             org.opencontainers.image.licenses=MIT
-          tags: ghcr.io/thanhdoancong127/libraryfon/book-service:latest
+          tags: ghcr.io/thanhdoancong127/libraryfon/book:latest
           visibility: public
 
       # - name: "Scan Docker Image with Trivy"
