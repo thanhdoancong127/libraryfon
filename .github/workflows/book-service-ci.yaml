@@ -17,12 +17,11 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - uses: ./.github/workflows/actions
       - name: "Maven Build"
-        uses: ./.github/workflows/actions
         run: mvn clean install -DskipTests -pl book -am
 
       - name: "Run Maven Test"
-        uses: ./.github/workflows/actions
         run: mvn test jacoco:report -pl book -am
 
       - name: Test Maven
