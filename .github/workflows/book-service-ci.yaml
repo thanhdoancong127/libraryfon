@@ -9,7 +9,7 @@ on:
       - '.github/workflows/book-service-ci.yaml'
   workflow_dispatch:
 jobs:
-  settup:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -52,13 +52,6 @@ jobs:
 
       - if: steps.rabbitmq-cache.outputs.cache-hit == 'true'
         run: docker load -i ~/image-cache/rabbitmq.tar
-  Test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - uses: ./.github/workflows/actions
       - name: "Maven Build"
@@ -66,13 +59,6 @@ jobs:
 
       - name: "Run Maven Test"
         run: mvn test jacoco:report -pl book -am
-  docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: "Log in to the Container registry"
         if: ${{ github.ref == 'refs/heads/integration-test-tc' }}
