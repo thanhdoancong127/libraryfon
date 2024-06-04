@@ -51,7 +51,7 @@ public class BorrowingControllerSpecificTest extends BaseGenericSelfTest {
         assert notification.hasBody() && notification.getStatusCode() == HttpStatus.OK;
 
         Map mapConverter = (Map) notification.getBody();
-        assert mapConverter.get("NotificationGetVm") != null;
+        assert mapConverter.get("notificationGetVm") != null;
     }
 
     @AfterEach

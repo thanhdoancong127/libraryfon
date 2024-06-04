@@ -66,7 +66,7 @@ public abstract class BaseGenericSelfTest {
         .withExposedPorts(BOOK_PORT)
         .dependsOn(dbContainer);
 
-    protected GenericContainer<?> notificationAppContainer = new GenericContainer<>("notification-service:latest")
+    protected GenericContainer<?> notificationAppContainer = new GenericContainer<>("notification:latest")
     .withEnv("server.servlet.context-path", NOTIFICATION_PATH)
     // set up env for db
     .withEnv("spring.datasource.url", "jdbc:postgresql://" + POSTGRES_ALIAS + ":" + dbContainer.POSTGRESQL_PORT + "/notificationdb")
