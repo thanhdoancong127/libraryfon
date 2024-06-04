@@ -55,6 +55,11 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - uses: ./.github/workflows/actions
       - name: "Maven Build"
         run: mvn clean package -DskipTests -pl book -am
@@ -64,6 +69,11 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: "Log in to the Container registry"
         if: ${{ github.ref == 'refs/heads/integration-test-tc' }}
         uses: docker/login-action@v3.1.0
