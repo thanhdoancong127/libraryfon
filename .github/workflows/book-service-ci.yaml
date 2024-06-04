@@ -17,6 +17,42 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - run: mkdir -p ~/image-cache
+
+      - id: postgres-cache
+        uses: actions/cache@v1
+        with:
+            path: ~/image-cache
+            # Adjust key to meet your cache time requirements e.g.
+            # ${{ hashFiles(*) }} can be useful here to invalidate
+            # cache on file changes
+            key: postgres-cache-${{ runner.os }}
+
+      - id: rabbitmq-cache
+        uses: actions/cache@v1
+        with:
+            path: ~/image-cache
+            # Adjust key to meet your cache time requirements e.g.
+            # ${{ hashFiles(*) }} can be useful here to invalidate
+            # cache on file changes
+            key: rabbitmq-cache-${{ runner.os }}
+
+      - if: steps.postgres-cache.outputs.cache-hit != 'true'
+        run: |
+          docker pull postgres:16.2
+          docker save -o ~/image-cache/postgres.tar postgres
+
+      - if: steps.postgres-cache.outputs.cache-hit == 'true'
+          run: docker load -i ~/image-cache/postgres.tar
+
+      - if: steps.rabbitmq-cache.outputs.cache-hit != 'true'
+          run: |
+            docker pull rabbitmq:3-management
+            docker save -o ~/image-cache/rabbitmq.tar rabbitmq
+
+      - if: steps.rabbitmq-cache.outputs.cache-hit == 'true'
+          run: docker load -i ~/image-cache/rabbitmq.tar
+
       - uses: ./.github/workflows/actions
       - name: "Maven Build"
         run: mvn clean install -DskipTests -pl book -am
