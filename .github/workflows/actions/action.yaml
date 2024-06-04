@@ -1,0 +1,45 @@
+runs:
+  using: "composite"
+  steps:
+    - name: "Set up JDK 21"
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - run: mkdir -p ~/postgres-cache
+    - run: mkdir -p ~/rabbitmq-cache
+
+    - id: postgres-cache
+      uses: actions/cache@v1
+      with:
+          path: ~/postgres-cache
+          # Adjust key to meet your cache time requirements e.g.
+          # ${{ hashFiles(*) }} can be useful here to invalidate
+          # cache on file changes
+          key: postgres-cache-${{ runner.os }}
+
+    - id: rabbitmq-cache
+      uses: actions/cache@v1
+      with:
+          path: ~/rabbitmq-cache
+          # Adjust key to meet your cache time requirements e.g.
+          # ${{ hashFiles(*) }} can be useful here to invalidate
+          # cache on file changes
+          key: rabbitmq-cache-${{ runner.os }}
+
+    - if: steps.postgres-cache.outputs.cache-hit != 'true'
+      run: |
+        docker pull postgres:16.2
+        docker save -o ~/postgres-cache/postgres.tar postgres
+
+    - if: steps.postgres-cache.outputs.cache-hit == 'true'
+          run: docker load -i ~/postgres-cache/postgres.tar
+
+    - if: steps.rabbitmq-cache.outputs.cache-hit != 'true'
+      run: |
+        docker pull rabbitmq:3-management
+        docker save -o ~/rabbitmq-cache/rabbitmq.tar rabbitmq
+
+    - if: steps.rabbitmq-cache.outputs.cache-hit == 'true'
+          run: docker load -i ~/rabbitmq-cache/rabbitmq.tar
