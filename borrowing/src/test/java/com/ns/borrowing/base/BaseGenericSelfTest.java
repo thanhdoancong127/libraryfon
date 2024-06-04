@@ -53,7 +53,7 @@ public abstract class BaseGenericSelfTest {
         .withNetworkAliases(RABBITMQ_ALIAS);
 
     @Container
-    protected static GenericContainer<?> bookAppContainer = new GenericContainer<>("book:latest")
+    protected static GenericContainer<?> bookAppContainer = new GenericContainer<>("ghcr.io/thanhdoancong127/libraryfon/book:latest")
         .withEnv(new HashMap<>(
             Map.of(
                 "spring.datasource.url", "jdbc:postgresql://" + POSTGRES_ALIAS + ":" + dbContainer.POSTGRESQL_PORT + "/bookdb",
@@ -66,20 +66,20 @@ public abstract class BaseGenericSelfTest {
         .withExposedPorts(BOOK_PORT)
         .dependsOn(dbContainer);
 
-    protected GenericContainer<?> notificationAppContainer = new GenericContainer<>("notification:latest")
-    .withEnv("server.servlet.context-path", NOTIFICATION_PATH)
-    // set up env for db
-    .withEnv("spring.datasource.url", "jdbc:postgresql://" + POSTGRES_ALIAS + ":" + dbContainer.POSTGRESQL_PORT + "/notificationdb")
-    .withEnv("spring.datasource.username", dbContainer.getUsername())
-    .withEnv("spring.datasource.password", dbContainer.getPassword())
-    // Setup env for rabbitmq
-    .withEnv("spring.rabbitmq.host", RABBITMQ_ALIAS)
-    .withEnv("spring.rabbitmq.port", "5672")
-    .withEnv("spring.rabbitmq.username", rabbitContainer.getAdminUsername())
-    .withEnv("spring.rabbitmq.password", rabbitContainer.getAdminPassword())
-    .withExposedPorts(NOTIFICATION_PORT)
-    .withNetwork(SHARED_NETWORK)
-    .dependsOn(dbContainer, rabbitContainer);
+    protected GenericContainer<?> notificationAppContainer = new GenericContainer<>("ghcr.io/thanhdoancong127/libraryfon/notification:latest")
+        .withEnv("server.servlet.context-path", NOTIFICATION_PATH)
+        // set up env for db
+        .withEnv("spring.datasource.url", "jdbc:postgresql://" + POSTGRES_ALIAS + ":" + dbContainer.POSTGRESQL_PORT + "/notificationdb")
+        .withEnv("spring.datasource.username", dbContainer.getUsername())
+        .withEnv("spring.datasource.password", dbContainer.getPassword())
+        // Setup env for rabbitmq
+        .withEnv("spring.rabbitmq.host", RABBITMQ_ALIAS)
+        .withEnv("spring.rabbitmq.port", "5672")
+        .withEnv("spring.rabbitmq.username", rabbitContainer.getAdminUsername())
+        .withEnv("spring.rabbitmq.password", rabbitContainer.getAdminPassword())
+        .withExposedPorts(NOTIFICATION_PORT)
+        .withNetwork(SHARED_NETWORK)
+        .dependsOn(dbContainer, rabbitContainer);
 
     @DynamicPropertySource
     static void rabbitProperties(DynamicPropertyRegistry registry) {
