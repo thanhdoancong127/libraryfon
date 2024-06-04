@@ -19,23 +19,6 @@ jobs:
 
       - run: mkdir -p ~/image-cache
 
-      - id: ryuk-cache
-        uses: actions/cache@v1
-        with:
-            path: ~/image-cache
-            # Adjust key to meet your cache time requirements e.g.
-            # ${{ hashFiles(*) }} can be useful here to invalidate
-            # cache on file changes
-            key: ryuk-cache-${{ runner.os }}
-
-      - if: steps.ryuk-cache.outputs.cache-hit != 'true'
-        run: |
-          docker pull testcontainers/ryuk:sha256-739f19eb83b1710f22ff452d7bec9cdd3f53d0ba5ff4096c6516a85de88eba0c
-          docker save -o ~/image-cache/ryuk.tar ryuk
-
-      - if: steps.ryuk-cache.outputs.cache-hit == 'true'
-        run: docker load -i ~/image-cache/ryuk.tar
-
       - id: postgres-cache
         uses: actions/cache@v1
         with:
