@@ -7,7 +7,7 @@ import com.ns.notification.entity.NotificationEntity;
 import lombok.Builder;
 
 public record NotificationsGetVm(
-    List<NotificationGetVm> NotificationGetVm
+    List<NotificationGetVm> notificationGetVm
 ) {
     @Builder
     public record NotificationGetVm(

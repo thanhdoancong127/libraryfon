@@ -53,7 +53,7 @@ public abstract class BaseGenericSelfTest {
         .withNetworkAliases(RABBITMQ_ALIAS);
 
     @Container
-    protected static GenericContainer<?> bookAppContainer = new GenericContainer<>("book-service:latest")
+    protected static GenericContainer<?> bookAppContainer = new GenericContainer<>("book:latest")
         .withEnv(new HashMap<>(
             Map.of(
                 "spring.datasource.url", "jdbc:postgresql://" + POSTGRES_ALIAS + ":" + dbContainer.POSTGRESQL_PORT + "/bookdb",
