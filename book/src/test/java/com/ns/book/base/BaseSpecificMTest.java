@@ -1,4 +1,4 @@
-package com.ns.borrowing.base;
+package com.ns.book.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,10 @@ public class BaseSpecificMTest {
 
     @Container
     // @ServiceConnection
-    public static PostgreSQLContainer<?> dbContainer = new PostgreSQLContainer<>("postgres:16.2");
+    public static PostgreSQLContainer<?> dbContainer = new PostgreSQLContainer<>("postgres:16.2")
+		.withDatabaseName("bookdb")
+		.withUsername("postgres")
+		.withPassword("postgres");
 
     @DynamicPropertySource
 	public static void properties(DynamicPropertyRegistry registry) {

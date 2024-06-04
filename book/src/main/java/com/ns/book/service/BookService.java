@@ -87,8 +87,12 @@ public class BookService {
     }
 
     private String postBookImagePath(MultipartFile image) {
-        String fileName = FileUtils.storeImageToResource(bookImagePath, image);
-        return bookImagePublicPath + fileName;
+        if(image != null) {
+            String fileName = FileUtils.storeImageToResource(bookImagePath, image);
+            return bookImagePublicPath + fileName;
+        }
+
+        return null;
     }
 
 }
