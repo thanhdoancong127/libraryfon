@@ -55,12 +55,9 @@ jobs:
 
       - uses: ./.github/workflows/actions
       - name: "Maven Build"
-        run: mvn clean install -DskipTests -pl book -am
+        run: mvn clean package -DskipTests -pl book -am
 
       - name: "Run Maven Test"
-        run: mvn test jacoco:report -pl book -am
-
-      - name: Test Maven
         run: mvn test jacoco:report -pl book -am
 
       - name: "Log in to the Container registry"
